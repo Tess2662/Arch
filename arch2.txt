@@ -22,7 +22,7 @@
 #mount /dev/sda6 /mnt/home
 #mount /dev/sda2 /mnt/mnt/windows
 
-#pacstrap /mnt base linux linux-firmware git
+#pacstrap /mnt base linux linux-firmware git nano man-db
 #genfstab -U /mnt >> /mnt/etc/fstab
 
 #arch-chroot /mnt
@@ -30,12 +30,14 @@
 ln -sf /usr/share/zoneinfo/Europe/Prague /etc/localtime
 hwclock --systohc
 
-echo "en_US.UTF-8" >> /etc/locale.gen
-echo "cs_CZ.UTF-8" >> /etc/locale.gen
+echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+echo "cs_CZ.UTF-8 UTF-8" >> /etc/locale.gen
+
+locale-gen
 
 echo "LANG=cs_CZ.UTF-8" >> /etc/locale.conf
-echo "LANGUAGE=cs_CZ.UTF-8" >> /etc/locale.conf
-echo "LC_MESSAGES=cs_CZ.UTF-8" >> /etc/locale.conf
+echo "LANGUAGE=en_US.UTF-8" >> /etc/locale.conf
+echo "LC_MESSAGES=en_US.UTF-8" >> /etc/locale.conf
 
 echo "KEYMAP=cz-qwertz" >> /etc/vconsole.conf
 #echo FONT=???" >> /etc/vconsole.conf
