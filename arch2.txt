@@ -1,0 +1,78 @@
+#!/bin/bash
+
+loadkeys cz-qwertz
+timedatectl set-ntp
+
+#partitions
+#mkfs
+
+mkfs.ext4 /dev/sda
+mount /dev/sda /mnt
+
+#mkfs.ext4 /dev/sda5
+#mkfs.ext4 /dev/sda6
+#mkfs.ext4 /dev/nvme0n1p3
+
+#mkswap /dev/sda4
+#swapon /dev/sda4
+#mkdir /mnt/var
+#mkdir /mnt/home
+#mkdir /mnt/mnt/windows
+#mount /dev/sda5 /mnt/var
+#mount /dev/sda6 /mnt/home
+#mount /dev/sda2 /mnt/mnt/windows
+
+pacstrap /mnt base linux linux-firmware
+genfstab -U /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt
+
+ln -sf /usr/share/zoneinfo/Europe/Prague /etc/localtime
+hwclock --systohc
+
+echo "en_US.UTF-8" >> /etc/locale.gen
+echo "cs_CZ.UTF-8" >> /etc/locale.gen
+
+echo "LANG=cs_CZ.UTF-8" >> /etc/locale.conf
+echo "LANGUAGE=cs_CZ.UTF-8" >> /etc/locale.conf
+echo "LC_MESSAGES=cs_CZ.UTF-8" >> /etc/locale.conf
+
+echo "KEYMAP=cz-qwertz" >> /etc/vconsole.conf
+#echo FONT=???" >> /etc/vconsole.conf
+
+echo "arch" >> /etc/hostname
+
+echo "127.0.0.1	localhost" >> /etc/hosts
+echo "::1		localhost" >> /etc/hosts
+echo "127.0.1.1	arch" >> /etc/hosts
+
+pacman -Syu
+
+pacman -S virtualbox virtualbox-host-modules-arch grub networkmanager openssh base-devel xf86-video-fbdev
+#efibootmgr
+modprobe vboxdrv
+
+#pacman -S efibootmgr grub intel-ucode ntfs-3g os-prober networkmanager nvidia xf86-video-intel base-devel
+#mesa nvidia-prime nvidia-utils
+
+#grub-install --target=x86_64-efi --efi-directory=/dev/nvme0n1p1 --bootloader-id=GRUB
+grub-install --target=i386-pc --force /dev/sda
+
+#echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/grub/grub.cfg
+echo "GRUB_DISABLE_SUBMENU=y" >> /etc/grub/grub.cfg
+echo "GRUB_DEFAULT=saved" >> /etc/grub/grub.cfg
+echo "GRUB_SAVEDEFAULT=true" >> /etc/grub/grub.cfg
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+systemctl enable --now NetworkManager
+systemctl enable --now sshd
+
+#DISPLAY
+#lspci -v | grep -A1 -e VGA -e 3D
+#pacman -Ss xf86-video
+
+useradd -m -G wheel master
+
+echo "set password for root and master !!!"
+echo "edit /etc/sudoers to use sudo !!!"
