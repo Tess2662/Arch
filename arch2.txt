@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #loadkeys cz-qwertz
-#timedatectl set-ntp
+#timedatectl set-ntp true
 
 #partitions
 #mkfs
