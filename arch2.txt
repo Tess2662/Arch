@@ -50,7 +50,7 @@ echo "127.0.1.1	arch" >> /etc/hosts
 
 pacman -Syu
 
-pacman -S virtualbox virtualbox-host-modules-arch grub networkmanager openssh base-devel xf86-video-fbdev
+pacman -S virtualbox-guest-utils grub networkmanager openssh base-devel xf86-video-fbdev
 #efibootmgr
 modprobe vboxdrv
 
