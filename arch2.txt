@@ -1,13 +1,13 @@
 #!/bin/bash
 
-loadkeys cz-qwertz
-timedatectl set-ntp
+#loadkeys cz-qwertz
+#timedatectl set-ntp
 
 #partitions
 #mkfs
 
-mkfs.ext4 /dev/sda
-mount /dev/sda /mnt
+#mkfs.ext4 /dev/sda
+#mount /dev/sda /mnt
 
 #mkfs.ext4 /dev/sda5
 #mkfs.ext4 /dev/sda6
@@ -22,10 +22,10 @@ mount /dev/sda /mnt
 #mount /dev/sda6 /mnt/home
 #mount /dev/sda2 /mnt/mnt/windows
 
-pacstrap /mnt base linux linux-firmware
-genfstab -U /mnt >> /mnt/etc/fstab
+#pacstrap /mnt base linux linux-firmware git
+#genfstab -U /mnt >> /mnt/etc/fstab
 
-arch-chroot /mnt
+#arch-chroot /mnt
 
 ln -sf /usr/share/zoneinfo/Europe/Prague /etc/localtime
 hwclock --systohc
