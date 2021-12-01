@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #loadkeys cz-qwertz
-#timedatectl set-ntp true
+#timedatectl set-ntp
 
 #partitions
 #mkfs
@@ -22,25 +22,24 @@
 #mount /dev/sda6 /mnt/home
 #mount /dev/sda2 /mnt/mnt/windows
 
-#pacstrap /mnt base linux linux-firmware git nano man-db
+#pacstrap /mnt base linux linux-firmware
 #genfstab -U /mnt >> /mnt/etc/fstab
 
-#arch-chroot /mnt
+a#rch-chroot /mnt
 
 ln -sf /usr/share/zoneinfo/Europe/Prague /etc/localtime
 hwclock --systohc
 
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 echo "cs_CZ.UTF-8 UTF-8" >> /etc/locale.gen
-
 locale-gen
 
 echo "LANG=cs_CZ.UTF-8" >> /etc/locale.conf
-echo "LANGUAGE=en_US.UTF-8" >> /etc/locale.conf
-echo "LC_MESSAGES=en_US.UTF-8" >> /etc/locale.conf
+#echo "LANGUAGE=cs_CZ.UTF-8" >> /etc/locale.conf
+echo "LC_MESSAGES=cs_CZ.UTF-8" >> /etc/locale.conf
 
 echo "KEYMAP=cz-qwertz" >> /etc/vconsole.conf
-#echo FONT=???" >> /etc/vconsole.conf
+echo "FONT=iso01-12x22" >> /etc/vconsole.conf
 
 echo "arch" >> /etc/hostname
 
@@ -50,11 +49,9 @@ echo "127.0.1.1	arch" >> /etc/hosts
 
 pacman -Syu
 
-pacman -S virtualbox-guest-utils grub networkmanager openssh base-devel xf86-video-fbdev
-#efibootmgr
-modprobe vboxdrv
+pacman -S virtualbox-guest-utils grub networkmanager openssh base-devel xf86-video-fbdev xorg
 
-#pacman -S efibootmgr grub intel-ucode ntfs-3g os-prober networkmanager nvidia xf86-video-intel base-devel
+#pacman -S efibootmgr grub intel-ucode ntfs-3g os-prober networkmanager nvidia xf86-video-intel base-devel xorg
 #mesa nvidia-prime nvidia-utils
 
 #grub-install --target=x86_64-efi --efi-directory=/dev/nvme0n1p1 --bootloader-id=GRUB
