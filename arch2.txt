@@ -4,7 +4,21 @@
 #timedatectl set-ntp
 
 #partitions
-#mkfs
+
+# if bellow doesn't work - modprobe dm_mod
+#pvcreate DEVICE
+#pvscan
+#vgcreate <volume_group> <physical_volume>
+#vgdisplay
+#lvcreate -L <size> <volume_group> -n <logical_volume>
+#lvcreate -l 100%FREE  <volume_group> -n <logical_volume>
+#lvcreate -L 10G VolGroup00 -n lvolhome /dev/sdc1
+#lvdisplay
+
+# if LV are not in /dev/group/...
+# modprobe dm_mod
+# vgscan
+# vgchange -ay
 
 #mkfs.ext4 /dev/sda
 #mount /dev/sda /mnt
@@ -13,6 +27,9 @@
 #mkfs.ext4 /dev/sda6
 #mkfs.ext4 /dev/nvme0n1p3
 
+#USE LOGICAL VOLUMES NOT DEVICES!!! IN LVM
+# mkfs.<fstype> /dev/<volume_group>/<logical_volume>
+# mount /dev/<volume_group>/<logical_volume> /<mountpoint>
 #mkswap /dev/sda4
 #swapon /dev/sda4
 #mkdir /mnt/var
@@ -25,18 +42,19 @@
 #pacstrap /mnt base linux linux-firmware
 #genfstab -U /mnt >> /mnt/etc/fstab
 
-a#rch-chroot /mnt
+#rch-chroot /mnt
 
 ln -sf /usr/share/zoneinfo/Europe/Prague /etc/localtime
 hwclock --systohc
 
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 echo "cs_CZ.UTF-8 UTF-8" >> /etc/locale.gen
-locale-gen
 
 echo "LANG=cs_CZ.UTF-8" >> /etc/locale.conf
-#echo "LANGUAGE=cs_CZ.UTF-8" >> /etc/locale.conf
-echo "LC_MESSAGES=cs_CZ.UTF-8" >> /etc/locale.conf
+#echo "LANGUAGE=en_US.UTF-8" >> /etc/locale.conf
+echo "LC_MESSAGES=en_US.UTF-8" >> /etc/locale.conf
+
+locale-gen
 
 echo "KEYMAP=cz-qwertz" >> /etc/vconsole.conf
 echo "FONT=iso01-12x22" >> /etc/vconsole.conf
@@ -49,15 +67,15 @@ echo "127.0.1.1	arch" >> /etc/hosts
 
 pacman -Syu
 
-pacman -S virtualbox-guest-utils grub networkmanager openssh base-devel xf86-video-fbdev xorg
+#pacman -S virtualbox-guest-utils grub networkmanager openssh base-devel xf86-video-fbdev
 
-#pacman -S efibootmgr grub intel-ucode ntfs-3g os-prober networkmanager nvidia xf86-video-intel base-devel xorg
-#mesa nvidia-prime nvidia-utils
+pacman -S efibootmgr grub intel-ucode ntfs-3g os-prober networkmanager nvidia xf86-video-intel base-devel lvm2
+#mesa nvidia-prime nvidia-utils xdg-user-dirs
 
-#grub-install --target=x86_64-efi --efi-directory=/dev/nvme0n1p1 --bootloader-id=GRUB
-grub-install --target=i386-pc --force /dev/sda
+grub-install --target=x86_64-efi --efi-directory=/dev/nvme0n1p1 --bootloader-id=GRUB
+#grub-install --target=i386-pc --force /dev/sda
 
-#echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/grub/grub.cfg
+echo "GRUB_DISABLE_OS_PROBER=false" >> /etc/grub/grub.cfg
 echo "GRUB_DISABLE_SUBMENU=y" >> /etc/grub/grub.cfg
 echo "GRUB_DEFAULT=saved" >> /etc/grub/grub.cfg
 echo "GRUB_SAVEDEFAULT=true" >> /etc/grub/grub.cfg
@@ -65,13 +83,33 @@ echo "GRUB_SAVEDEFAULT=true" >> /etc/grub/grub.cfg
 grub-mkconfig -o /boot/grub/grub.cfg
 
 systemctl enable --now NetworkManager
-systemctl enable --now sshd
+#systemctl enable --now sshd
 
 #DISPLAY
 #lspci -v | grep -A1 -e VGA -e 3D
 #pacman -Ss xf86-video
 
-useradd -m -G wheel master
+#create english user directoreis, must be logged as user ?
+#LC_ALL=C xdg-user-dirs-update --force
 
+useradd -m -G wheel video master
+
+#DESKTOP
+#pacman -S flameshot i3 terminator firefox xorg numlockx
+# ~/xinitrc
+# numlockx
+# exec i3
+# ~/.config/i3/config
+# exec_always setxkbmap cz
+
+#AUR
+# git clone <url>
+# makepkg
+# pacman -U <generated pkg>
+
+# generate initframs
+# mkinitcpio -P
+
+echo ""
 echo "set password for root and master !!!"
 echo "edit /etc/sudoers to use sudo !!!"
