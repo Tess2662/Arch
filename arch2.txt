@@ -70,7 +70,7 @@ pacman -Syu
 #pacman -S virtualbox-guest-utils grub networkmanager openssh base-devel xf86-video-fbdev
 
 pacman -S efibootmgr grub intel-ucode ntfs-3g os-prober networkmanager nvidia xf86-video-intel base-devel lvm2
-#mesa nvidia-prime nvidia-utils xdg-user-dirs
+#mesa nvidia-prime nvidia-utils xdg-user-dirs sof-firmware
 
 grub-install --target=x86_64-efi --efi-directory=/dev/nvme0n1p1 --bootloader-id=GRUB
 #grub-install --target=i386-pc --force /dev/sda
@@ -95,17 +95,28 @@ systemctl enable --now NetworkManager
 useradd -m -G wheel video master
 
 #DESKTOP
-#pacman -S flameshot i3 terminator firefox xorg numlockx
+#pacman -S flameshot i3 alacritty firefox xorg numlockx feh
 # ~/xinitrc
 # numlockx
 # exec i3
 # ~/.config/i3/config
 # exec_always setxkbmap cz
+# exec_always feh --bg-fill <wallpaper>
+# ~/.Xresources
+# Xft.dpi: 120  | *.dpi: 120
 
 #AUR
 # git clone <url>
 # makepkg
 # pacman -U <generated pkg>
+
+#/etc/mkinitcpio.conf
+# AUR - https://aur.archlinux.org/mkinitcpio-numlock.git
+#HOOKS=.. autodetect numlock modconf ...
+# if system doesnt boot
+#HOOKS=(base udev ... block lvm2 filesystems)
+#For systemd based initramfs:
+#HOOKS=(base systemd ... block lvm2 filesystems)
 
 # generate initframs
 # mkinitcpio -P
@@ -113,3 +124,7 @@ useradd -m -G wheel video master
 echo ""
 echo "set password for root and master !!!"
 echo "edit /etc/sudoers to use sudo !!!"
+
+# https://wiki.archlinux.org/title/Alacritty#%22user@host:cwd%22_in_window_title_bar
+# /etc/bash.bashrc
+#  xterm*|rxvt*|Eterm|aterm|kterm|gnome*|alacritty*)
